@@ -1,6 +1,6 @@
 from picrawler import Picrawler
 import random
-#from time import sleep
+from time import sleep
 
 crawler = Picrawler([10,11,12,4,5,6,1,2,3,7,8,9])
 
@@ -44,4 +44,4 @@ if __name__ == '__main__':
             mTRight(speed)
         else:
             mTLeft(speed)
-    
+    sleep(1)
