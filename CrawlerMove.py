@@ -27,3 +27,21 @@ def mTRight(speed):
 #Turn Left
 def mTLeft(speed):
     crawler.do_action('turn left angle',2,speed)
+    
+if __name__ == '__main__':
+    speed = 100
+    for i in range(100):
+        randN = random.randint(1, 6)
+        if randN < 2:
+            mForward(speed)
+        elif randN < 3:
+            mRight(speed)
+        elif randN < 4:
+            mLeft(speed)
+        elif randN < 5:
+            mBack(speed)
+        elif randN < 6:
+            mTRight(speed)
+        else:
+            mTLeft(speed)
+    
