@@ -1,6 +1,8 @@
 from picrawler import Picrawler
 from vilib import Vilib
 import random
+from time import sleep
+import time
 
 crawler = Picrawler([10,11,12,4,5,6,1,2,3,7,8,9])
 
@@ -34,7 +36,7 @@ def mRandomWalk(speed):
     numActions = 0
     
     Vilib.color_detect("blue")
-    while Vilib.detect_obj_parameter['color_n']!=1:
+    while Vilib.detect_obj_parameter['color_n']!=1 and numActions<150:
         randN = random.randint = (1, 100)
         
         if randN < 33:
@@ -47,10 +49,12 @@ def mRandomWalk(speed):
         numActions += 1
             
         Vilib.color_detect("red")
-        if Vilib.detect_obj_parameter['color_n']!=1:
+        sleep(0.1)
+        if Vilib.detect_obj_parameter['color_n']==1:
             mBack(speed)
             
         Vilib.color_detect("blue")
+        sleep(0.1)
     
     print("Finished Random Walk")
     return numActions
@@ -61,8 +65,10 @@ if __name__ == '__main__':
     
     speed = 100
     
+    startTime = time.time()
     actions = mRandomWalk(speed)
     print("Total number of actions: ", actions)
+    print("Total length of time: ", time.time()-startTime)
     
         
         
