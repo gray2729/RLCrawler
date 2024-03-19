@@ -1,68 +1,42 @@
 from gymnasium import Env
-from gymnasium.spaces import Discrete, Box
-import random
+from gymnasium import spaces
+import numpy as np
+#import random
 
 class RobEnv(Env):
     def __init__(self):
-        self.action_space = Discrete(3)
-        self.state = float(str(random.randint(0, 5))+'.'+str(random.randint(0, 5)))
+        self.size = 5
+        self.action_space = spaces.Discrete(3)
         
-        dictState = {}
+        self.observation_space = spaces.Dict(
+            {"agent": spaces.Box(0, self.size-1, shape=(2,), dtype=int)}
+        )
         
-        dictState[0.0]=[0.1,1.0,0.0,0.0]
-        dictState[0.1]=[0.2,0.1,0.0,0.1]
-        dictState[0.2]=[0.3,1.2,0.1,0.2]
-        dictState[0.3]=[0.4,0.3,0.2,0.3]
-        dictState[0.4]=[0.5,1.4,0.3,0.4]
-        dictState[0.5]=[0.5,1.5,0.4,0.5]
-        dictState[1.0]=[1.0,2.0,1.0,0.0]
-        dictState[1.2]=[1.2,2.2,1.2,0.2]
-        dictState[1.4]=[1.5,2.4,1.4,0.4]
-        dictState[1.5]=[1.5,2.5,1.4,0.5]
-        dictState[2.0]=[2.1,3.0,2.0,1.0]
-        dictState[2.1]=[2.2,2.1,2.0,2.1]
-        dictState[2.2]=[2.3,3.2,2.1,1.2]
-        dictState[2.3]=[2.4,2.3,2.2,2.3]
-        dictState[2.4]=[2.5,3.4,2.3,1.4]
-        dictState[2.5]=[2.5,3.5,2.4,1.5]
-        dictState[3.0]=[3.0,4.0,3.0,2.0]
-        dictState[3.2]=[3.2,4.2,3.2,2.2]
-        dictState[3.4]=[3.5,4.4,3.4,2.4]
-        dictState[3.5]=[3.5,3.5,3.5,3.5]
-        dictState[4.0]=[4.1,5.0,4.0,3.0]
-        dictState[4.1]=[4.2,5.1,4.0,4.1]
-        dictState[4.2]=[4.3,5.2,4.1,3.2]
-        dictState[4.3]=[4.4,5.3,4.2,4.3]
-        dictState[4.4]=[4.5,5.4,4.3,3.4]
-        dictState[4.5]=[4.5,5.5,4.4,3.5]
-        dictState[5.0]=[5.1,5.0,5.0,4.0]
-        dictState[5.1]=[5.2,5.1,5.0,4.1]
-        dictState[5.2]=[5.3,5.2,5.1,4.2]
-        dictState[5.3]=[5.4,5.3,5.2,4.3]
-        dictState[5.4]=[5.5,5.4,5.3,4.4]
-        dictState[5.5]=[5.5,5.5,5.4,4.5]
-        
-        self.states = dictState
+        self.movements_actions = {
+            0: np.array([0, 1]), #move forward
+            1: np.array([1, 0]), #move left
+            2: np.array([-1, 0]) # move right
+        }
         
     def step(self, action):
-        self.state = self.states[self.state][action]
+        movement = self.movements_actions[action]
         
-        if self.state == 3.5:
+        self.current_state = np.clip(self.current_state + movement, 0, self.size-1)
+        if np.array_equal(self.current_state, np.array([4,4])):
             reward = 0
             done = True
         else:
             reward = -1
             done = False
+        observation = self.current_state
         
-        info = {}
-        return self.state, reward, done, info
+        return observation, reward, done
         
     def render(self):
         pass
     
     def reset(self):
-        self.state = float(str(random.randint(0, 5))+'.'+str(random.randint(0, 5)))
-        while self.state in {1.1, 1.3, 3.1, 3.3, 3.5}:
-            self.state = float(str(random.randint(0, 5))+'.'+str(random.randint(0, 5)))
+        self.current_state = np.array([0,0])
+        observation = self.current_state
             
-        return self.state
+        return observation
