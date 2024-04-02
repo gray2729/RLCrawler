@@ -39,6 +39,8 @@ def mBack(speed):
     
 #Movement Model Walk
 def mMModelWalk(actions, speed):
+    Vilib.camera_start()
+    Vilib.display()
     
     score = 0
     startTime = time.time()
@@ -114,9 +116,9 @@ if __name__ == '__main__':
     #mRandomMWalk(speed)
    
 #Movement Model Learning Response
-    #actions = ReadActions("LearningActions.txt")
-    #time, score=mMModelWalk(actions[0], speed)
+    actions = ReadActions("LearningActions.txt")
+    mTime, score=mMModelWalk(actions[0], speed)
     
-    #print(time)
-    #print(score)
+    print(mTime)
+    print(score)
         
